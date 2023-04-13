@@ -13,7 +13,7 @@
          </dd>
      </dl>
       <dl>
-          <dt>비밀번호 확인 </dt>
+          <dt>비밀번호 확인</dt>
           <dd>
               <input type="password" name="userPwRe">
           </dd>

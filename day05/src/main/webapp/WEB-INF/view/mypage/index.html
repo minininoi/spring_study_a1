@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+    <th:block layout:fragment="addCss">
+        <link rel="stylesheet" type="text/css" th: href="@{/css/mypage.css}">
+    </th:block>
+
+    <th:block layout:fragment="addScript">
+        <script th:src="@{/js/mypage.js}"></script>
+    </th:block>
+
+    <main layout:fragment="content">
+        <h1>마이페이지</h1>
+        <h2 th:text="${commonData}"></h2><!--공통기능, 통제 기능-->
+    </main>
+
+</html>
