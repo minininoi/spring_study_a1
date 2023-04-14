@@ -4,21 +4,31 @@ import Interceptors.MemberOnlyInterceptor;
 import commons.CommonLibrary;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+import javax.validation.Valid;
+
 @Import(DbConfig.class)
 @Configuration
 @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
+    @Value("${environment}")
+    private String environment;
+    @Value("${fileUploadPath}")
+    private String fileUploadPath;
     @Autowired
     private ApplicationContext applicationContext; //스프링 컨테이너
     @Override
@@ -28,6 +38,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
+        boolean isCacheable = environment.equals("real")? true: false;
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("/WEB-INF/view/"); //확장자가 html인 경로
@@ -84,6 +95,9 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
        registry.addResourceHandler("/**")
                .addResourceLocations("classpath:/static/");
+       //파일 업로드 정적 경로 매칭
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:///D:uploads/"+fileUploadPath);
     }
 
     @Override
@@ -95,5 +109,11 @@ public class MvcConfig implements WebMvcConfigurer {
     @Bean
     public MemberOnlyInterceptor memberOnlyInterceptor(){
         return new MemberOnlyInterceptor();
+    }
+    public static PropertySourcesPlaceholderConfigurer properties(){
+        PropertySourcesPlaceholderConfigurer conf = new PropertySourcesPlaceholderConfigurer();
+        conf.setLocations(new ClassPathResource("application.properties"));
+
+        return conf;
     }
 }

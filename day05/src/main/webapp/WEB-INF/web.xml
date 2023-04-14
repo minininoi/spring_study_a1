@@ -19,7 +19,16 @@
                 config.ControllerConfig
             </param-value>
         </init-param>
+        <init-param>
+            <param-name>spring.profile.active</param-name>
+            <param-value>dev</param-value>
+        </init-param>
+
         <load-on-startup>1</load-on-startup>
+        <multipart-config>
+            <max-file-size>20971520</max-file-size>
+            <max-request-size>62914560</max-request-size>
+        </multipart-config>
     </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
